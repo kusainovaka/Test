@@ -1,131 +1,154 @@
 //
-//  CustomNavigationView.swift
-//  Test
+//  CustomNavigationBar.swift
+//  OnlineBank
 //
 //  Created by Kamila Kussainova on 10/22/20.
-//  Copyright © 2020 Kamila Kusainova. All rights reserved.
 //
 
 import UIKit
 
-
-protocol CustomNavBarDelegate: class {
-    func didMove(type: NavBarState)
+enum NavigationBarState {
+    case hidden
+    case show
+    case none
 }
 
-class CustomNavBar {
-    private lazy var addButton: UIButton = {
+fileprivate enum Constants {
+    // Button
+    static let buttonSizeForLargeState: CGFloat = 48
+    static let buttonSizeForSmallState: CGFloat = 32
+    static let buttonBottomMarginForLargeState: CGFloat = 12
+    static let buttonBottomMarginForSmallState: CGFloat = 6
+    static let buttonRightOffset = 52
+    // Navigation bar
+    static let navBarHeightSmallState: CGFloat = 44
+    static let navBarHeightLargeState: CGFloat = 96.5
+    // Title
+    static let titleSmallRightOffset = 20
+    static let titleLargeRightOffset = buttonRightOffset + titleSmallRightOffset
+    // Scroll
+    static let scrollMaxHeight: CGFloat = 80
+    static let scrollMinHeight: CGFloat = 56
+}
+
+protocol CustomNavigationBarDelegate: class {
+    func didUpdateTitleState(with state: NavigationBarState)
+    func didTapOnActioButton()
+}
+
+extension CustomNavigationBarDelegate {
+    func didTapOnActioButton() { }
+}
+
+class CustomNavigationBar {
+    
+    weak var delegate: CustomNavigationBarDelegate?
+    
+    private lazy var actioButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .green
-        button.layer.cornerRadius = Const.ImageSizeForLargeState / 2
+        button.layer.cornerRadius = Constants.buttonSizeForLargeState / 2
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(didTapOnActioButton), for: .touchUpInside)
         return button
     }()
     
-    private let titleLabel = UILabel()
-    private let titleText: String
-    private let navBar: UINavigationController
+    private let largeTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 32)
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        return label
+    }()
     
-    weak var delegate: CustomNavBarDelegate?
+    private let controller: UINavigationController
+    private var isHasButton = false
     
-    init(title: String, navBar: UINavigationController) {
-        self.titleText = title
-        self.navBar = navBar
+    init(title: String, controller: UINavigationController) {
+        self.controller = controller
+        controller.navigationBar.prefersLargeTitles = true
         
-        navBar.navigationBar.prefersLargeTitles = true
-        imageAnimation()
+        setupTitle(with: title)
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func imageAnimation() {
-        navBar.navigationBar.addSubview(addButton)
-        addButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-52)
-            make.bottom.equalToSuperview().offset(-Const.ImageBottomMarginForLargeState)
-            make.size.equalTo(Const.ImageSizeForLargeState)
-        }
-    }
-    
-    private func titleAnimation() {
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 32)
-        titleLabel.text = titleText
-        titleLabel.numberOfLines = 0
-        titleLabel.lineBreakMode = .byWordWrapping
-        navBar.navigationBar.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
+    private func setupTitle(with title: String) {
+        largeTitleLabel.text = title
+        controller.navigationBar.addSubview(largeTitleLabel)
+        largeTitleLabel.snp.makeConstraints { make in
+            let rightOffset = isHasButton ? Constants.titleLargeRightOffset : Constants.titleSmallRightOffset
+            make.right.equalToSuperview().offset(-rightOffset)
             make.left.equalToSuperview().offset(16)
-            //            let iPhone5 = 20 ? 60
-            make.right.equalTo(addButton.snp.left).offset(-20)
             make.bottom.equalToSuperview()
         }
     }
     
-    func test(with height: CGFloat) {
-        if height > 80 {
-            setupTitle(type: .show)
-        } else if height < 74 {
-            if height < 56 {
-                setupTitle(type: .hidden)
+    func setButton(with imageName: String) {
+        isHasButton = true
+        controller.navigationBar.addSubview(actioButton)
+        actioButton.setImage(UIImage(named: imageName), for: .normal)
+        actioButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-Constants.buttonRightOffset)
+            make.bottom.equalToSuperview().offset(-Constants.buttonBottomMarginForLargeState)
+            make.size.equalTo(Constants.buttonSizeForLargeState)
+        }
+    }
+    
+    func didScrollView(_ height: CGFloat) {
+        if height > Constants.scrollMaxHeight {
+            setTitleState(with: .show)
+        } else {
+            if height < Constants.scrollMaxHeight {
+                setTitleState(with: .hidden)
             } else {
-                setupTitle(type: .none)
+                setTitleState(with: .none)
             }
         }
         
-        moveAndResizeImage(for: height)
+        if isHasButton {
+            moveAndResizeButton(for: height)
+        }
+    }
+}
+
+
+private extension CustomNavigationBar {
+    @objc func didTapOnActioButton() {
+        delegate?.didTapOnActioButton()
     }
     
-    
-    func some() {
-        
-    }
-    
-    private func moveAndResizeImage(for height: CGFloat) {
-        let coeff: CGFloat = {
-            let delta = height - Const.NavBarHeightSmallState
-            let heightDifferenceBetweenStates = (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
+    func moveAndResizeButton(for height: CGFloat) {
+        let coefficient: CGFloat = {
+            let delta = height - Constants.navBarHeightSmallState
+            let heightDifferenceBetweenStates = (Constants.navBarHeightLargeState - Constants.navBarHeightSmallState)
             return delta / heightDifferenceBetweenStates
         }()
         
-        let factor = Const.ImageSizeForSmallState / Const.ImageSizeForLargeState
+        let factor = Constants.buttonSizeForSmallState / Constants.buttonSizeForLargeState
+        let yTranslation: CGFloat = {
+            let ysizeDiff = Constants.buttonSizeForLargeState * (1.0 - factor)
+            let maxYTranslation = Constants.buttonBottomMarginForLargeState - Constants.buttonBottomMarginForSmallState + ysizeDiff
+            return max(0, min(maxYTranslation, (maxYTranslation - coefficient * (Constants.buttonBottomMarginForSmallState + ysizeDiff))))
+        }()
         
+        let xSizeDiff = Constants.buttonSizeForLargeState * (2.0 - factor)
+        let xTranslation = max(0, xSizeDiff - coefficient * xSizeDiff)
         let scale: CGFloat = {
-            let sizeAddendumFactor = coeff * (1.0 - factor)
+            let sizeAddendumFactor = coefficient * (1.0 - factor)
             return min(1.0, sizeAddendumFactor + factor)
         }()
         
-        // Value of difference between icons for large and small states
-        let sizeDiff = Const.ImageSizeForLargeState * (1.0 - factor) // 8.0
-        let test = Const.ImageSizeForLargeState * (2.0 - factor) // 8.0
-        
-        let yTranslation: CGFloat = {
-            /// This value = 14. It equals to difference of 12 and 6 (bottom margin for large and small states). Also it adds 8.0 (size difference when the image gets smaller size)
-            let maxYTranslation = Const.ImageBottomMarginForLargeState - Const.ImageBottomMarginForSmallState + sizeDiff
-            return max(0, min(maxYTranslation, (maxYTranslation - coeff * (Const.ImageBottomMarginForSmallState + sizeDiff))))
-        }()
-        
-        let xTranslation = max(0, test - coeff * test)
-        
-        addButton.transform = CGAffineTransform.identity
+        actioButton.transform = CGAffineTransform.identity
             .scaledBy(x: scale, y: scale)
             .translatedBy(x: xTranslation, y: yTranslation)
     }
     
-    private func setupTitle(type: NavBarState) {
-        delegate?.didMove(type: type)
-        switch type {
-            case .hidden:
-                navBar.navigationItem.title = titleText
-                titleLabel.isHidden = true
+    func setTitleState(with state: NavigationBarState) {
+        switch state {
+            case .hidden, .none:
+                largeTitleLabel.isHidden = true
             case .show:
-                navBar.navigationItem.title = ""
-                titleAnimation()
-                titleLabel.isHidden = false
-            case .none:
-                navBar.navigationItem.title = ""
-                titleLabel.isHidden = true
+                largeTitleLabel.isHidden = false
         }
+        
+        delegate?.didUpdateTitleState(with: state)
     }
 }
