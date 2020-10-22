@@ -8,7 +8,7 @@
 
 import UIKit
 
-private struct Const {
+struct Const {
     /// Image height/width for Large NavBar state
     static let ImageSizeForLargeState: CGFloat = 48
     /// Margin from right anchor of safe area to right anchor of Image
@@ -43,18 +43,35 @@ class LargeTitlePage: UIViewController {
     }()
     let titleLabel = UILabel()
     let titleText = "Платежи и переводы"
+    var navBar: CustomNavBar?
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
         setupNavBar()
         setupTableView()
+//        title = titleText
     }
     
     func setupNavBar() {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.frame = CGRect(x: 0, y: 0, width: 375, height: 200)
-        imageAnimation()
+        if let navBar = navigationController {
+            self.navBar = CustomNavBar(title: titleText, navBar: navBar)
+            self.navBar?.delegate = self
+        }
+
+//        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationController?.navigationBar.frame = CGRect(x: 0, y: 0, width: 375, height: 200)
+//        imageAnimation()
+        
+//        navigationController?.navigationBar = navBar.navigationBar
     }
     
     func setupTableView() {
@@ -100,17 +117,18 @@ extension LargeTitlePage: UITableViewDataSource, UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let height = navigationController?.navigationBar.frame.height else { return }
-        if height > 80 {
-            setupTitle(type: .show)
-        } else if height < 74 {
-            if height < 56 {
-                setupTitle(type: .hidden)
-            } else {
-                setupTitle(type: .none)
-            }
-        }
-        
-        moveAndResizeImage(for: height)
+        navBar?.test(with: height)
+//        if height > 80 {
+//            setupTitle(type: .show)
+//        } else if height < 74 {
+//            if height < 56 {
+//                setupTitle(type: .hidden)
+//            } else {
+//                setupTitle(type: .none)
+//            }
+//        }
+//
+//        moveAndResizeImage(for: height)
     }
     
     func setupTitle(type: NavBarState) {
@@ -184,4 +202,16 @@ extension LargeTitlePage: UITableViewDataSource, UITableViewDelegate {
             .scaledBy(x: scale, y: scale)
             .translatedBy(x: xTranslation, y: yTranslation)
     }
+}
+
+
+extension LargeTitlePage: CustomNavBarDelegate {
+    func didMove(type: NavBarState) {
+        switch type {
+            case .hidden:
+                navigationItem.title = titleText
+            case .show, .none:
+                navigationItem.title = ""
+        }
+    }    
 }
