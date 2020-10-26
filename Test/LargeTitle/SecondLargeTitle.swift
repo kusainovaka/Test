@@ -1,32 +1,23 @@
 //
-//  LargeTitlePage.swift
+//  SecondLargeTitle.swift
 //  Test
 //
-//  Created by Kamila Kussainova on 10/19/20.
+//  Created by Kamila Kussainova on 10/26/20.
 //  Copyright © 2020 Kamila Kusainova. All rights reserved.
 //
 
 import UIKit
 
-class LargeTitlePage: UIViewController {
+class SecondLargeTitle: UIViewController {
     
-    let tableView = UITableView()
-    let titleText = "Введите номер телефона"
     var navBar: CustomNavigationBar?
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    let titleText = "Платежи и переводы"
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
         setupTableView()
-        print(navigationController?.navigationItem.hidesBackButton, "MODE")
+        title = titleText
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -39,50 +30,38 @@ class LargeTitlePage: UIViewController {
         setupNavBar()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        navigationController?.navigationBar.sizeToFit()
-    }
-    
-    func setupNavBar() {
-        if let navigationController = navigationController {
-            navBar = CustomNavigationBar(title: titleText, controller: navigationController)
-            navBar?.setButton(with: "settings")
-            navBar?.customDelegate = self
+    func layoutUI() {
+        let someView = UIView()
+        someView.backgroundColor = .orange
+        view.addSubview(someView)
+        someView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
     
     func setupTableView() {
+        let tableView = UITableView()
         view.addSubview(tableView)
+        tableView.backgroundColor = .orange
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        setupTableHeaderView()
     }
     
-    func setupTableHeaderView() {
-        let segmentView = UIView()
-        segmentView.backgroundColor = .red
-        let filterView = UIView()
-        filterView.backgroundColor = .green
-        let headerView = UIStackView()
-        headerView.distribution = .fillProportionally
-        headerView.axis = .vertical
-        headerView.addArrangedSubview(segmentView)
-        headerView.addArrangedSubview(filterView)
-        headerView.snp.makeConstraints { make in
-            make.width.equalTo(375)
-            make.height.equalTo(56)
+    func setupNavBar() {
+        if let navigationController = navigationController {
+            print(navigationController.navigationItem.hidesBackButton, "MODE")
+            navBar = CustomNavigationBar(title: titleText, controller: navigationController)
+            navBar?.setButton(with: "settings")
+            navBar?.customDelegate = self
         }
-        
-        tableView.tableHeaderView = headerView
     }
 }
 
-extension LargeTitlePage: UITableViewDataSource, UITableViewDelegate {
+extension SecondLargeTitle: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 30
     }
@@ -99,12 +78,12 @@ extension LargeTitlePage: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = SecondLargeTitle()
+        let vc = ThirdLargeTitlePage()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
 
-extension LargeTitlePage: CustomNavigationBarDelegate {
+extension SecondLargeTitle: CustomNavigationBarDelegate {
     func didUpdateTitleState(with state: NavigationBarState) {
         switch state {
             case .hidden:
@@ -112,12 +91,5 @@ extension LargeTitlePage: CustomNavigationBarDelegate {
             case .show, .none:
                 navigationItem.title = ""
         }
-    }    
-}
-
-extension UINavigationBar {
-
-    override open func sizeThatFits(_ size: CGSize) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.size.width, height: 150)
     }
 }

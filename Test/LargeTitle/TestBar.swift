@@ -1,17 +1,12 @@
 //
-//  CustomNavigationBar.swift
-//  OnlineBank
+//  TestBar.swift
+//  Test
 //
-//  Created by Kamila Kussainova on 10/22/20.
+//  Created by Kamila Kussainova on 10/26/20.
+//  Copyright © 2020 Kamila Kusainova. All rights reserved.
 //
 
 import UIKit
-
-enum NavigationBarState {
-    case hidden
-    case show
-    case none
-}
 
 fileprivate enum Constants {
     // Button
@@ -31,18 +26,10 @@ fileprivate enum Constants {
     static let scrollMinHeight: CGFloat = 56
 }
 
-protocol CustomNavigationBarDelegate: class {
-    func didUpdateTitleState(with state: NavigationBarState)
-    func didTapOnActioButton()
-}
-
-extension CustomNavigationBarDelegate {
-    func didTapOnActioButton() { }
-}
-
-class CustomNavigationBar {
+class TestBar: UINavigationBar {
     
     weak var customDelegate: CustomNavigationBarDelegate?
+    var customHeight : CGFloat = 126
     
     private lazy var actioButton: UIButton = {
         let button = UIButton()
@@ -54,54 +41,93 @@ class CustomNavigationBar {
     
     private let largeTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 34)
+        label.font = UIFont.boldSystemFont(ofSize: 32)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         return label
     }()
     
-    private let controller: UINavigationController
     private var isHasButton = false
     
-    init(title: String, controller: UINavigationController) {
-        self.controller = controller
-        controller.navigationBar.prefersLargeTitles = true
-        
-        //        translatesAutoresizingMaskIntoConstraints = false
-        //        prefersLargeTitles = true
-        //        backgroundColor = .orange
+    //    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    //        let newSize :CGSize = CGSize(width: self.frame.size.width, height: 126)
+    //        return newSize
+    //    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        //        self.isTranslucent = false
+        self.barTintColor = .orange
+        prefersLargeTitles = true
         setupTitle()
-        largeTitleLabel.text = title
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func setTitle(text: String) {
         largeTitleLabel.text = text
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        
+        return CGSize(width: UIScreen.main.bounds.width, height: customHeight)
+        
     }
     
-    func removeAll() {
-        controller.navigationBar.subviews.forEach { view in
-            view.removeFromSuperview()
-        }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.tintColor = .black
+        
+        frame = CGRect(x: frame.origin.x, y:  0, width: frame.size.width, height: customHeight)
+        
+        // title position (statusbar height / 2)
+        setTitleVerticalPositionAdjustment(-10, for: UIBarMetrics.default)
+        
+//        for subview in self.subviews {
+//            var stringFromClass = NSStringFromClass(subview.classForCoder)
+//            if stringFromClass.contains("BarBackground") {
+//                subview.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: customHeight)
+//                subview.backgroundColor = .yellow
+//
+//            }
+//
+//            stringFromClass = NSStringFromClass(subview.classForCoder)
+//            if stringFromClass.contains("BarContent") {
+//
+//                subview.frame = CGRect(x: subview.frame.origin.x, y: 20, width: subview.frame.width, height: customHeight - 20)
+//
+//
+//            }
+//        }
     }
     
+    //    override func layoutSubviews() {
+    //        super.layoutSubviews()
+    //        sizeToFit()
+    ////        frame = CGRect(x: frame.origin.x, y:  0, width: frame.size.width, height: 126)
+    //    }
+        
     private func setupTitle() {
-        controller.navigationBar.addSubview(largeTitleLabel)
+        largeTitleLabel.text = "Введите номер телефона"
+        addSubview(largeTitleLabel)
+        //                controller.navigationBar.addSubview(largeTitleLabel)
         largeTitleLabel.snp.makeConstraints { make in
             let rightOffset = isHasButton ? Constants.titleLargeRightOffset : Constants.titleSmallRightOffset
-            make.top.equalToSuperview().offset(24)
+            make.top.equalToSuperview().offset(Constants.navBarHeightSmallState)
             make.right.equalToSuperview().offset(-rightOffset)
             make.left.equalToSuperview().offset(16)
-//            make.bottom.equalToSuperview().offset(16) // TODO: KAmila ???
+//            make.width.equalTo(300)
+//            make.height.equalTo(82)
         }
     }
     
     func setButton(with imageName: String) {
         isHasButton = true
-        controller.navigationBar.addSubview(actioButton)
+        addSubview(actioButton)
+        //                controller.navigationBar.addSubview(actioButton)
         actioButton.setImage(UIImage(named: imageName), for: .normal)
         actioButton.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-Constants.buttonRightOffset)
@@ -127,7 +153,7 @@ class CustomNavigationBar {
     }
 }
 
-private extension CustomNavigationBar {
+private extension TestBar {
     @objc func didTapOnActioButton() {
         customDelegate?.didTapOnActioButton()
     }
