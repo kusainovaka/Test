@@ -67,11 +67,12 @@ class CustomNavigationBar {
         self.controller = controller
         controller.navigationBar.prefersLargeTitles = true
         
-        //        translatesAutoresizingMaskIntoConstraints = false
-        //        prefersLargeTitles = true
-        //        backgroundColor = .orange
+    //        translatesAutoresizingMaskIntoConstraints = false
+    //        prefersLargeTitles = true
+    //        backgroundColor = .orange
         setupTitle()
         largeTitleLabel.text = title
+        updateNavBarToClearBackground()
     }
     
     func setTitle(text: String) {
@@ -90,12 +91,16 @@ class CustomNavigationBar {
     
     private func setupTitle() {
         controller.navigationBar.addSubview(largeTitleLabel)
+//        largeTitleLabel.backgroundColor = .red
+    
         largeTitleLabel.snp.makeConstraints { make in
             let rightOffset = isHasButton ? Constants.titleLargeRightOffset : Constants.titleSmallRightOffset
-            make.top.equalToSuperview().offset(24)
+
+//            make.top.equalToSuperview().offset(24)
+            make.top.equalToSuperview().offset(Constants.navBarHeightSmallState)
             make.right.equalToSuperview().offset(-rightOffset)
             make.left.equalToSuperview().offset(16)
-//            make.bottom.equalToSuperview().offset(16) // TODO: KAmila ???
+            //            make.bottom.equalToSuperview().offset(16) // TODO: KAmila ???
         }
     }
     
@@ -123,6 +128,58 @@ class CustomNavigationBar {
         
         if isHasButton {
             moveAndResizeButton(for: height)
+        }
+    }
+    
+    // TODO: Kamila
+    @available(iOS 13.0, *)
+    private func navigationBarSetup(with backgroundColor: UIColor, textColor: UIColor) {
+//
+//        controller.navigationBar.prefersLargeTitles = true
+//
+//       let style = UINavigationBarAppearance()
+//       style.configureWithDefaultBackground()
+//
+//       style.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 18)]
+//
+//        controller.navigationBar.standardAppearance = style
+//        controller.navigationBar.compactAppearance = style
+//
+//
+//       //Configure Large Style
+//       let largeStyle = UINavigationBarAppearance()
+//       largeStyle.configureWithTransparentBackground()
+//
+//       largeStyle.largeTitleTextAttributes = [.font: UIFont.systemFont(ofSize: 28)]
+//
+//        controller.navigationBar.scrollEdgeAppearance = largeStyle
+        
+        
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.shadowColor = nil
+        navBarAppearance.titleTextAttributes = [.foregroundColor: textColor]
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: textColor]
+        navBarAppearance.backgroundColor = backgroundColor
+        controller.navigationBar.standardAppearance = navBarAppearance
+        controller.navigationBar.scrollEdgeAppearance = navBarAppearance
+        controller.navigationBar.compactAppearance = navBarAppearance
+    }
+    
+    private func navigationBarSetup(backgroundColor: UIColor, textColor: UIColor, shadowImage: UIImage) {
+        controller.navigationBar.backgroundColor = backgroundColor
+        controller.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: textColor]
+        controller.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: textColor]
+        controller.navigationBar.shadowImage = UIImage()
+        controller.navigationBar.layer.shadowColor = UIColor.clear.cgColor
+        controller.navigationBar.layer.shadowOffset = .zero
+    }
+    
+    private func updateNavBarToClearBackground() {
+        if #available(iOS 13, *) {
+            navigationBarSetup(with: .white, textColor: .black)
+        } else {
+            navigationBarSetup(backgroundColor: .white, textColor: .black, shadowImage: UIImage())
         }
     }
 }

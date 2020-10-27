@@ -22,7 +22,7 @@ fileprivate enum Constants {
     static let titleSmallRightOffset = 20
     static let titleLargeRightOffset = buttonRightOffset + titleSmallRightOffset
     // Scroll
-    static let scrollMaxHeight: CGFloat = 80
+    static let scrollMaxHeight: CGFloat = 100//80
     static let scrollMinHeight: CGFloat = 56
 }
 
@@ -43,6 +43,7 @@ class TestBar: UINavigationBar {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 32)
         label.numberOfLines = 0
+        label.backgroundColor = .green
         label.lineBreakMode = .byWordWrapping
         return label
     }()
@@ -153,7 +154,7 @@ class TestBar: UINavigationBar {
     }
 }
 
-private extension TestBar {
+extension TestBar {
     @objc func didTapOnActioButton() {
         customDelegate?.didTapOnActioButton()
     }

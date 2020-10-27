@@ -9,7 +9,6 @@
 import UIKit
 
 class LargeTitlePage: UIViewController {
-    
     let tableView = UITableView()
     let titleText = "Введите номер телефона"
     var navBar: CustomNavigationBar?
@@ -24,9 +23,9 @@ class LargeTitlePage: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+        view.backgroundColor = .white
+        title = titleText
         setupTableView()
-        print(navigationController?.navigationItem.hidesBackButton, "MODE")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -36,11 +35,29 @@ class LargeTitlePage: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupNavBar()
+//        setupNavBar()
+        test()
+    }
+    
+    func test() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        for navItem in(self.navigationController?.navigationBar.subviews)! {
+             for itemSubView in navItem.subviews {
+                print("!11111")
+                 if let largeLabel = itemSubView as? UILabel {
+                    print("!22222")
+                    largeLabel.text = self.title
+                     largeLabel.textColor = .green
+                     largeLabel.numberOfLines = 0
+                     largeLabel.lineBreakMode = .byWordWrapping
+                 }
+             }
+        }
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        
         navigationController?.navigationBar.sizeToFit()
     }
     
@@ -48,7 +65,7 @@ class LargeTitlePage: UIViewController {
         if let navigationController = navigationController {
             navBar = CustomNavigationBar(title: titleText, controller: navigationController)
             navBar?.setButton(with: "settings")
-            navBar?.customDelegate = self
+//            navBar?.customDelegate = self
         }
     }
     
@@ -58,9 +75,11 @@ class LargeTitlePage: UIViewController {
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+//            make.edges.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
+            make.left.right.bottom.equalToSuperview()
         }
-        setupTableHeaderView()
+//        setupTableHeaderView()
     }
     
     func setupTableHeaderView() {
@@ -90,12 +109,18 @@ extension LargeTitlePage: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = "Kamila Hello"
+//        cell.backgroundColor = .blue
         return cell
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let height = navigationController?.navigationBar.frame.height else { return }
-        navBar?.didScrollView(height)
+//        guard let navBa = navigationController?.navigationBar as? TestBar else {
+//            return
+//        }
+//        navBa.customDelegate = self
+//        navBa.didScrollView(height)
+//        navBar?.didScrollView(height)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

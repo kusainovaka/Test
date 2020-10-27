@@ -26,6 +26,7 @@
 		8E40149625469E5F00378E05 /* TestBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E40149525469E5F00378E05 /* TestBar.swift */; };
 		8E40149B2546ACDD00378E05 /* SecondLargeTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E40149A2546ACDD00378E05 /* SecondLargeTitle.swift */; };
 		8E4014A52546DC1E00378E05 /* ThirdLargeTitlePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4014A42546DC1E00378E05 /* ThirdLargeTitlePage.swift */; };
+		8E4014ED2546E4D100378E05 /* NavBarProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4014EC2546E4D100378E05 /* NavBarProtocol.swift */; };
 		8E402B56217843140001F40A /* FormBuilderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E402B55217843140001F40A /* FormBuilderViewController.swift */; };
 		8E5E85ED219DF2B000AA36B3 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5E85EC219DF2B000AA36B3 /* VideoCell.swift */; };
 		8E6A833D250F6BEB00D1BE3B /* PhoneNumberMaskPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6A833C250F6BEB00D1BE3B /* PhoneNumberMaskPage.swift */; };
@@ -103,6 +104,7 @@
 		8E40149525469E5F00378E05 /* TestBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBar.swift; sourceTree = "<group>"; };
 		8E40149A2546ACDD00378E05 /* SecondLargeTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondLargeTitle.swift; sourceTree = "<group>"; };
 		8E4014A42546DC1E00378E05 /* ThirdLargeTitlePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdLargeTitlePage.swift; sourceTree = "<group>"; };
+		8E4014EC2546E4D100378E05 /* NavBarProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarProtocol.swift; sourceTree = "<group>"; };
 		8E402B55217843140001F40A /* FormBuilderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormBuilderViewController.swift; sourceTree = "<group>"; };
 		8E5E85EC219DF2B000AA36B3 /* VideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		8E6A833C250F6BEB00D1BE3B /* PhoneNumberMaskPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberMaskPage.swift; sourceTree = "<group>"; };
@@ -313,6 +315,7 @@
 				8E40149A2546ACDD00378E05 /* SecondLargeTitle.swift */,
 				8E4014A42546DC1E00378E05 /* ThirdLargeTitlePage.swift */,
 				8E382F4F25414DA000CF3FE2 /* CustomNavigationView.swift */,
+				8E4014EC2546E4D100378E05 /* NavBarProtocol.swift */,
 				8E4014902546973900378E05 /* CustomBarNavigationViewController.swift */,
 				8E40149525469E5F00378E05 /* TestBar.swift */,
 			);
@@ -647,6 +650,7 @@
 				8E4014912546973900378E05 /* CustomBarNavigationViewController.swift in Sources */,
 				8E8926432450314B00658D9E /* PDFViewController.swift in Sources */,
 				8E058C012164AEC0008257B1 /* ViewController.swift in Sources */,
+				8E4014ED2546E4D100378E05 /* NavBarProtocol.swift in Sources */,
 				8EC5735A2419FE980058A12F /* FloatingView.swift in Sources */,
 				8EC8A05C2536EA3900E08F81 /* DefaultPage.swift in Sources */,
 				8E301DBF240E6E5F000F1CEF /* CollectionViewController.swift in Sources */,

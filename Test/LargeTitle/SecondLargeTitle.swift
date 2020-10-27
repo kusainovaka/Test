@@ -27,7 +27,7 @@ class SecondLargeTitle: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupNavBar()
+//        setupNavBar()
     }
     
     func layoutUI() {
