@@ -8,8 +8,13 @@
 
 import UIKit
 
+protocol CardAccountCellDelegate: class {
+    func didTapOnButton(with cell: CardAccountCell)
+}
+
 class CardAccountCell: UITableViewCell {
     
+    weak var delegate: CardAccountCellDelegate?
     private let leftImageView: UIImageView = {
        let imageView = UIImageView()
         imageView.backgroundColor = .red
@@ -38,10 +43,20 @@ class CardAccountCell: UITableViewCell {
     private let showButton: UIButton = {
         let button = UIButton()
         button.setTitle("Показать все", for: .normal)
+        button.setTitle("Скрыть", for: .selected)
         button.setTitleColor(.gray, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         return button
     }()
+    
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        return stackView
+    }()
+    
+    var isShow = true
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -83,9 +98,17 @@ class CardAccountCell: UITableViewCell {
             make.height.equalTo(20)
         }
         
+        contentView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(cardDetails.snp.bottom).offset(10)
+            make.left.right.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-10)
+        }
+        
         contentView.addSubview(showButton)
+        showButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
         showButton.snp.makeConstraints { make in
-            make.top.equalTo(amountLabel.snp.bottom).offset(15)
+//            make.top.equalTo(stackView.snp.bottom).offset(15)
             make.right.equalToSuperview().offset(-24)
             make.bottom.equalToSuperview().offset(-16)
             make.width.greaterThanOrEqualTo(80)
@@ -95,5 +118,21 @@ class CardAccountCell: UITableViewCell {
     func configure() {
         titleLabel.text = "CardAccountCell"
         amountLabel.text = "$$$$$$"
+    }
+    
+    @objc func didTapOnButton() {
+        delegate?.didTapOnButton(with: self)
+        showButton.isSelected.toggle()
+        isShow.toggle()
+    }
+    
+    func addCards() {
+        if isShow {
+            let cardView = CardCell()
+            cardView.configure()
+            stackView.addArrangedSubview(cardView.contentView)
+        } else {
+            stackView.subviews.forEach { $0.removeFromSuperview() }
+        }
     }
 }

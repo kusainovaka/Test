@@ -50,6 +50,7 @@ extension TestTableViewController: UITableViewDelegate, UITableViewDataSource {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "CardAccountCell", for: indexPath) as? CardAccountCell else {
                     return .init()
                 }
+                cell.delegate = self
                 cell.configure()
                 return cell
             case .account:
@@ -69,5 +70,15 @@ extension TestTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadData()
+    }
+}
+
+
+extension TestTableViewController: CardAccountCellDelegate {
+    func didTapOnButton(with cell: CardAccountCell) {
+        tableView.beginUpdates()
+        cell.addCards()
+        tableView.endUpdates()
+        print("Hello")
     }
 }
