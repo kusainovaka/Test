@@ -35,7 +35,7 @@ class LargeTitlePage: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        setupNavBar()
+        setupNavBar()
         test()
     }
     
@@ -65,7 +65,7 @@ class LargeTitlePage: UIViewController {
         if let navigationController = navigationController {
             navBar = CustomNavigationBar(title: titleText, controller: navigationController)
             navBar?.setButton(with: "settings")
-//            navBar?.customDelegate = self
+            navBar?.customDelegate = self
         }
     }
     
@@ -120,7 +120,7 @@ extension LargeTitlePage: UITableViewDataSource, UITableViewDelegate {
 //        }
 //        navBa.customDelegate = self
 //        navBa.didScrollView(height)
-//        navBar?.didScrollView(height)
+        navBar?.didScrollView(height)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
