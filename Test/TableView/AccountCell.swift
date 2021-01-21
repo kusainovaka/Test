@@ -12,7 +12,7 @@ class AccountCell: UITableViewCell {
     
     private let leftImageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.backgroundColor = .red
+        imageView.image = UIImage(named: "tenge")
         return imageView
     }()
     
@@ -33,7 +33,6 @@ class AccountCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .green
         layoutUI()
     }
     

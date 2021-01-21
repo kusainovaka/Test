@@ -12,7 +12,7 @@ class CardCell: UITableViewCell {
     
     private let leftImageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.backgroundColor = .red
+        imageView.image = UIImage(named: "tenge")
         return imageView
     }()
     
@@ -35,7 +35,6 @@ class CardCell: UITableViewCell {
         return label
     }()
 
-    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -56,13 +55,15 @@ class CardCell: UITableViewCell {
         
         contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(15)
+            make.top.equalTo(leftImageView)
             make.left.equalTo(leftImageView.snp.right).offset(12)
             make.height.equalTo(20).priority(.low)
         }
-        contentView.addSubview(subTitle)
-        subTitle.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(2)
+        let card = some(with: "world-icon", text: "••0001")
+        
+        contentView.addSubview(card)
+        card.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom)
             make.left.equalTo(titleLabel)
             make.bottom.equalToSuperview().offset(-16)
         }
@@ -76,8 +77,28 @@ class CardCell: UITableViewCell {
     }
     
     func configure() {
-        titleLabel.text = "CardCell"
+        titleLabel.text = "ARTYOM BOSS"
         subTitle.text = "**** 1235"
-        amountLabel.text = "$$$$$$"
+        amountLabel.text = "300 720,00 ₸ "
+    }
+    
+    func some(with imageName: String, text: String) -> UIView {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 4
+        let image = UIImageView(image: UIImage(named: imageName))
+        image.contentMode = .scaleAspectFit
+        stackView.addArrangedSubview(image)
+        image.snp.makeConstraints { make in
+            make.width.lessThanOrEqualTo(16)
+        }
+        
+        let title = UILabel()
+        title.text = text
+        title.textColor = .lightGray
+        title.font = UIFont.systemFont(ofSize: 13)
+        stackView.addArrangedSubview(title)
+        return stackView
     }
 }

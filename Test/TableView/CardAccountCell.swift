@@ -17,7 +17,7 @@ class CardAccountCell: UITableViewCell {
     weak var delegate: CardAccountCellDelegate?
     private let leftImageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.backgroundColor = .red
+        imageView.image = UIImage(named: "tenge")
         return imageView
     }()
     
@@ -27,10 +27,11 @@ class CardAccountCell: UITableViewCell {
         return label
     }()
     
-    private let cardDetails: UIView = {
-        let view = UIView()
-        view.backgroundColor = .blue
-        return view
+    private let cardDetails: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 18
+        return stackView
     }()
     
     private let amountLabel: UILabel = {
@@ -42,6 +43,8 @@ class CardAccountCell: UITableViewCell {
     
     private let showButton: UIButton = {
         let button = UIButton()
+        button.setImage(UIImage(named: "arrow-down"), for: .normal)
+        button.setImage(UIImage(named: "arrow-up"), for: .selected)
         button.setTitle("Показать все", for: .normal)
         button.setTitle("Скрыть", for: .selected)
         button.setTitleColor(.gray, for: .normal)
@@ -49,10 +52,10 @@ class CardAccountCell: UITableViewCell {
         return button
     }()
     
-    private let stackView: UIStackView = {
+    private let cardsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 10
+        stackView.spacing = 0
         return stackView
     }()
     
@@ -61,7 +64,6 @@ class CardAccountCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .green
         layoutUI()
     }
     
@@ -78,11 +80,17 @@ class CardAccountCell: UITableViewCell {
         
         contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(15)
+            make.top.equalToSuperview().offset(16)
             make.left.equalTo(leftImageView.snp.right).offset(12)
             make.height.equalTo(20)
         }
         
+        let one = some(with: "account-icon", text: "x 342434")
+        let two = some(with: "card-icon", text: "x 32454")
+        
+        cardDetails.addArrangedSubview(one)
+        cardDetails.addArrangedSubview(two)
+
         contentView.addSubview(cardDetails)
         cardDetails.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
@@ -93,22 +101,21 @@ class CardAccountCell: UITableViewCell {
         
         contentView.addSubview(amountLabel)
         amountLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
+            make.top.equalTo(titleLabel)
             make.right.equalToSuperview().offset(-16)
             make.height.equalTo(20)
         }
         
-        contentView.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
-            make.top.equalTo(cardDetails.snp.bottom).offset(10)
+        contentView.addSubview(cardsStackView)
+        cardsStackView.snp.makeConstraints { make in
+            make.top.equalTo(cardDetails.snp.bottom).offset(8)
             make.left.right.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview().offset(-30)
         }
         
         contentView.addSubview(showButton)
         showButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
         showButton.snp.makeConstraints { make in
-//            make.top.equalTo(stackView.snp.bottom).offset(15)
             make.right.equalToSuperview().offset(-24)
             make.bottom.equalToSuperview().offset(-16)
             make.width.greaterThanOrEqualTo(80)
@@ -116,23 +123,74 @@ class CardAccountCell: UITableViewCell {
     }
     
     func configure() {
-        titleLabel.text = "CardAccountCell"
-        amountLabel.text = "$$$$$$"
+        titleLabel.text = "KZ12••2070"
+        amountLabel.text = "12 900,00 $"
     }
     
     @objc func didTapOnButton() {
         delegate?.didTapOnButton(with: self)
         showButton.isSelected.toggle()
         isShow.toggle()
+        cardDetails.isHidden = !isShow
     }
     
     func addCards() {
         if isShow {
             let cardView = CardCell()
             cardView.configure()
-            stackView.addArrangedSubview(cardView.contentView)
+//            let line = UIView()
+//            line.backgroundColor = .gray
+//
+            let line = lineView()
+            line.snp.makeConstraints { make in
+                           make.height.equalTo(20)
+                       }
+            cardsStackView.addArrangedSubview(line)
+            cardsStackView.addArrangedSubview(cardView.contentView)
+            titleLabel.snp.updateConstraints { make in
+                make.top.equalToSuperview().offset(24)
+            }
         } else {
-            stackView.subviews.forEach { $0.removeFromSuperview() }
+            titleLabel.snp.updateConstraints { make in
+                make.top.equalToSuperview().offset(16)
+            }
+
+            cardsStackView.subviews.forEach { $0.removeFromSuperview() }
         }
+        updateConstraints()
+    }
+    
+    func some(with imageName: String, text: String) -> UIView {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 4
+        let image = UIImageView(image: UIImage(named: imageName))
+        image.contentMode = .scaleAspectFit
+        stackView.addArrangedSubview(image)
+        image.snp.makeConstraints { make in
+            make.width.lessThanOrEqualTo(16)
+        }
+        
+        let title = UILabel()
+        title.text = text
+        title.textColor = .lightGray
+        title.font = UIFont.systemFont(ofSize: 13)
+        stackView.addArrangedSubview(title)
+        return stackView
+    }
+    
+    func lineView() -> UIView {
+        let mainLine = UIView()
+        let line = UIView()
+        line.backgroundColor = .red
+        line.frame = CGRect(x: 34, y: 0, width: 1, height: 20)
+//        line.snp.makeConstraints { make in
+//            make.height.equalTo(20)
+//            make.left.equalToSuperview()
+//            make.width.equalTo(1)
+//        }
+        mainLine.addSubview(line)
+        return mainLine
     }
 }
