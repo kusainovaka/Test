@@ -38,7 +38,6 @@ class CardCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .green
         layoutUI()
     }
     
@@ -49,7 +48,8 @@ class CardCell: UITableViewCell {
     private func layoutUI() {
         contentView.addSubview(leftImageView)
         leftImageView.snp.makeConstraints { make in
-            make.top.left.equalToSuperview().offset(16)
+            make.left.equalToSuperview().offset(16)
+            make.top.equalToSuperview()
             make.size.equalTo(36)
         }
         
@@ -65,7 +65,7 @@ class CardCell: UITableViewCell {
         card.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom)
             make.left.equalTo(titleLabel)
-            make.bottom.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview()//.offset(-16)
         }
         
         contentView.addSubview(amountLabel)

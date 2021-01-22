@@ -16,7 +16,7 @@ enum AccountListType: CaseIterable {
 
 class TestTableViewController: UIViewController {
     let tableView = UITableView()
-    var cellList = AccountListType.allCases
+    var cellList: [AccountListType] = [.account, .cardAccount, .cardAccount]
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -16,7 +16,7 @@ class CardAccountCell: UITableViewCell {
     
     weak var delegate: CardAccountCellDelegate?
     private let leftImageView: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.image = UIImage(named: "tenge")
         return imageView
     }()
@@ -90,7 +90,7 @@ class CardAccountCell: UITableViewCell {
         
         cardDetails.addArrangedSubview(one)
         cardDetails.addArrangedSubview(two)
-
+        
         contentView.addSubview(cardDetails)
         cardDetails.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
@@ -129,35 +129,40 @@ class CardAccountCell: UITableViewCell {
     
     @objc func didTapOnButton() {
         delegate?.didTapOnButton(with: self)
+        //        addCards()
+        
         showButton.isSelected.toggle()
         isShow.toggle()
-        cardDetails.isHidden = !isShow
     }
     
     func addCards() {
         if isShow {
-            let cardView = CardCell()
-            cardView.configure()
-//            let line = UIView()
-//            line.backgroundColor = .gray
-//
-            let line = lineView()
-            line.snp.makeConstraints { make in
-                           make.height.equalTo(20)
-                       }
-            cardsStackView.addArrangedSubview(line)
-            cardsStackView.addArrangedSubview(cardView.contentView)
-            titleLabel.snp.updateConstraints { make in
-                make.top.equalToSuperview().offset(24)
+            addStackView()
+            addStackView()
+            cardsStackView.snp.updateConstraints { make in
+                make.top.equalTo(cardDetails.snp.bottom)
+                make.bottom.equalToSuperview().offset(-47)
             }
         } else {
-            titleLabel.snp.updateConstraints { make in
-                make.top.equalToSuperview().offset(16)
-            }
-
             cardsStackView.subviews.forEach { $0.removeFromSuperview() }
+            cardsStackView.snp.updateConstraints { make in
+                make.top.equalTo(cardDetails.snp.bottom).offset(8)
+                make.bottom.equalToSuperview().offset(-30)
+            }
         }
         updateConstraints()
+    }
+    
+    
+    func addStackView() {
+        let cardView = CardCell()
+        cardView.configure()
+        let line = lineView()
+        line.snp.makeConstraints { make in
+            make.height.equalTo(20)
+        }
+        cardsStackView.addArrangedSubview(line)
+        cardsStackView.addArrangedSubview(cardView.contentView)
     }
     
     func some(with imageName: String, text: String) -> UIView {
@@ -183,13 +188,8 @@ class CardAccountCell: UITableViewCell {
     func lineView() -> UIView {
         let mainLine = UIView()
         let line = UIView()
-        line.backgroundColor = .red
-        line.frame = CGRect(x: 34, y: 0, width: 1, height: 20)
-//        line.snp.makeConstraints { make in
-//            make.height.equalTo(20)
-//            make.left.equalToSuperview()
-//            make.width.equalTo(1)
-//        }
+        line.backgroundColor = .blue
+        line.frame = CGRect(x: 36, y: 0, width: 1, height: 20)
         mainLine.addSubview(line)
         return mainLine
     }
