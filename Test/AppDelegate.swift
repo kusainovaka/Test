@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
 //        let some = CustomBarNavigationViewController(rootViewController: LargeTitlePage())
-        window?.rootViewController = UINavigationController(rootViewController: TestTableViewController())
+        window?.rootViewController = UINavigationController(rootViewController: DurationViewController())
         window?.makeKeyAndVisible()
         return true
     }

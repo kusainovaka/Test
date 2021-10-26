@@ -15,9 +15,8 @@ protocol CardAccountCellDelegate: class {
 class CardAccountCell: UITableViewCell {
     
     weak var delegate: CardAccountCellDelegate?
-    private let leftImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "tenge")
+    private let leftImageView: CardImageView = {
+        let imageView = CardImageView()
         return imageView
     }()
     
@@ -73,9 +72,10 @@ class CardAccountCell: UITableViewCell {
     
     private func layoutUI() {
         contentView.addSubview(leftImageView)
+        leftImageView.configure(with: .init(imageName: "tenge-icon", type: .block))
         leftImageView.snp.makeConstraints { make in
             make.top.left.equalToSuperview().offset(16)
-            make.size.equalTo(36)
+            make.size.equalTo(44)
         }
         
         contentView.addSubview(titleLabel)

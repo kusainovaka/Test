@@ -12,7 +12,7 @@ class AccountCell: UITableViewCell {
     
     private let leftImageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = UIImage(named: "tenge")
+        imageView.image = UIImage(named: "test-some")
         return imageView
     }()
     
